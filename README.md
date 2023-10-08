@@ -2,7 +2,7 @@
 
 ### 1) Definir limites de CPU e memória ao container
 
-1.1 Executar o comando abaixo para ver os dados de consumo do container:
+##### Executar o comando abaixo para ver os dados de consumo do container:
 
 ```sh
 docker stats nome-container
