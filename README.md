@@ -8,7 +8,7 @@
 docker stats nome-container
 ```
 
-Para definir limites ao container (CPU, Memória e etc...)
+##### Para definir limites ao container (CPU, Memória e etc...)
 
 ```sh
 docker update nome-container -m 128M --cpus 0.2
@@ -20,7 +20,7 @@ Explicação do comando acima:
 
 
 
-Posso definir esses limites diretamente na criação do container, exemplo:
+##### Posso definir esses limites diretamente na criação do container, exemplo:
 
 ```sh
 docker run --name nome-container -dti -m 128M --cpus 0.2 nome-imagem
@@ -28,19 +28,19 @@ docker run --name nome-container -dti -m 128M --cpus 0.2 nome-imagem
 
 ### 2) Informações, logs e processos.
 
-Informações gerais sobre o servidor do docker.
+##### Informações gerais sobre o servidor do docker.
 
 ```sh
 docker info
 ```
 
-Visualizar os logs de execução do container.
+##### Visualizar os logs de execução do container.
 
 ```sh
 docker logs nome-container
 ```
 
-Visualizar os processos em execução dentro do container.
+##### Visualizar os processos em execução dentro do container.
 
 ```sh
 docker top nome-container
@@ -48,7 +48,7 @@ docker top nome-container
 
 ### 3) Redes
 
-Listar as redes disponíveis ao docker.
+##### Listar as redes disponíveis ao docker.
 
 ```sh
 docker network ls
@@ -59,7 +59,7 @@ docker network ls
 - A rede Bridge consegue se comunicar com a rede Host.
 
 
-Ver quais containers estão na rede bridge:
+##### Ver quais containers estão na rede bridge:
 
 ```sh
 docker network inspect bridge
@@ -68,7 +68,7 @@ docker network inspect bridge
 - Uma das informações apresentadas com o comando acima são os ips dos containers na rede.
 
 
-Posso validar a comunicação entre dois containers usando o ping.
+##### Posso validar a comunicação entre dois containers usando o ping.
 
 ```sh
 docker exec -ti nome-container bash
@@ -77,7 +77,7 @@ apt get install -y iputils-ping
 ping ip-outro-container
 ```
 
-Para isolar dois containers em uma rede.
+##### Para isolar dois containers em uma rede.
 
 ```sh
 docker network create minha-rede
