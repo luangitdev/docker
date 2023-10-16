@@ -2,7 +2,7 @@ version: '3.9'
 services:
   apache:
     image: httpd:latest
-    container_name: apache-app
+    container_name: apache-app-projeto
     ports:
     - '8080:80'
     volumes:
