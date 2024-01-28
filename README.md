@@ -47,6 +47,129 @@ docker container run -ti ubuntu
 - Se eu der um Ctrl + d e sair do container do ubuntu o processo do bash é encerrado e o container também.
 - Para sair sem matar o processo (e encerrar o container) é necessário usar o atalho ctrl + p + q.
 
+### Para voltar ao terminal do Container após sair:
+
+```sh
+docker container attach container_id
+docker container attach container_nome
+```
+
+### Executar/Criar container em segundo plano sem o terminal interativo:
+
+```sh
+docker container run -d nginx
+```
+
+### Para executar um comando em um container que está em execução no segundo plano:
+
+```sh
+docker container exec -ti container_id ls
+docker container exec -ti container_id bash
+```
+
+### Parar a execução de um container:
+
+```sh
+docker container stop container_id
+docker container stop container_nome
+```
+
+### Reiniciar um container:
+
+```sh
+docker container restart container_id
+docker container restart container_nome
+```
+
+### Para ver os detalhes do container:
+
+```sh
+docker container inspect container_id
+```
+
+### Existe a opção de apenas pausar o container:
+
+```sh
+docker container pause container_id
+```
+
+### Para apagar/remover um container:
+
+```sh
+docker container rm
+docker container rm -f #(Força a parada do container e o apaga) 
+```
+
+### Ver o quanto o container está usando de recursos:
+
+```sh
+docker container stats container_id
+```
+
+### Ver os processos em execução dentro do container:
+
+```sh
+docker container top container_id
+```
+
+### Criar um container definindo a capacidade máxima de memória:
+
+```sh
+docker container -d -m 128M nginx
+```
+
+### Atualizar um container em execução:
+
+```sh
+docker container update recurso_a_ser_atualizado container_id
+docker container update --cpus 0.2 container_id #(Define que será usado no máximo 20% do core de cpu disponível)
+```
+
+### Criar persistência de dados no container(Caso já exista uma pasta criada no Host):
+
+```sh
+docker container run -ti --mount type=bind,src=/pasta/no/host,dst=/pasta/no/container nome_distro
+docker container run -ti --mount type=bind,source=/opt/meuvolume,destination=/volumecontainer ubuntu
+docker container run -ti --mount type=bind,src=/opt/meuvolume,dst=/volumecontainer,ro ubuntu  #(ro = read only)
+docker container run -ti -v /pasta/no/host:/pasta/no/container --name dbdados centos #(-v sintaxe antiga para gerir volumes)
+```
+
+### Criar persistência de dados no container (Usando Volume):
+
+```sh
+docker volume create nome_volume
+docker volume ls
+docker volume inspect nome_volume #(Olhar o "Mountpoint")
+docker container run -ti --mount type=volume,src=nome_volume,dst=/pasta/no/container debian
+```
+
+### Container Data Only:
+
+>O Data only é um termo que se refere a um tipo de container que é usado apenas para armazenar dados persistentes de outros containers1. O Data only não executa nenhum processo, mas apenas possui um ou mais volumes que podem ser compartilhados >com outros containers usando a opção --volumes-from.
+>
+>A vantagem de usar o Data only é que ele permite gerenciar dados em docker de forma isolada e reutilizável, sem depender do diretório do host ou do filesystem do container3. O Data only também facilita o backup e a migração dos dados, pois eles >estão armazenados em um container separado4.
+>
+>No entanto, o Data only também tem algumas desvantagens, como a necessidade de criar e gerenciar um container adicional para cada conjunto de dados, e a dificuldade de especificar opções de montagem, como permissões ou flags5.
+>
+>O --mount é uma forma mais moderna e explícita de montar volumes no docker6. O --mount permite especificar vários parâmetros, como o tipo, a origem, o destino e as opções do volume7. O --mount também suporta o uso de drivers de volume, que >permitem armazenar volumes em hosts remotos ou provedores de nuvem, criptografar o conteúdo dos volumes ou adicionar outras funcionalidades8.
+>
+>A vantagem de usar o --mount é que ele oferece mais flexibilidade e controle sobre os volumes, além de ser mais fácil de entender e manter. O --mount também tem um melhor desempenho do que o --volumes-from, pois ele evita a sobrecarga de criar e >gerenciar containers data only.
+>
+
+#### Exemplo de criação de um container Data Only:
+
+```sh
+docker container create -v /data --name dbdados centos
+```
+
+#### Exemplo de como apontar para um container Data Only (É necessário usar o --volumes-from para referenciar o container Data Only):
+
+```sh
+docker container run -d -p 5432:5432 --name pgsql1 --volumes-from dbdados -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker -e POSTGRESQL_DB=docker kamui/postgresql
+```
+
+
+
 # PROCESSAMENTO, LOGS E REDE
 
 ### 1) Definir limites de CPU e memória ao container
