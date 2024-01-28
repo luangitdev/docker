@@ -168,8 +168,6 @@ docker container create -v /data --name dbdados centos
 docker container run -d -p 5432:5432 --name pgsql1 --volumes-from dbdados -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker -e POSTGRESQL_DB=docker kamui/postgresql
 ```
 
-
-
 # PROCESSAMENTO, LOGS E REDE
 
 ### 1) Definir limites de CPU e memória ao container
@@ -262,3 +260,53 @@ docker network create minha-rede
 docker run -dti --name nome-container-a --network minha-rede nome-imagem
 docker run -dti --name nome-container-b --network minha-rede nome-imagem
 ```
+
+# Criação de imagens:
+
+### Cria uma pasta onde ficarão os arquivos dockerfile
+
+```sh
+mkdir dockerfiles && cd dockerfiles
+```
+
+### Cria um arquivo chamado Dockerfile dentro da pasta criada acima.
+
+```sh
+nano Dockerfile
+```
+
+### Cola nesse arquivo o conteúdo de exemplo abaixo:
+
+```docker
+FROM debian
+
+RUN apt-get update && apt-get install -y apache2 && apt-get clean 
+
+ENV APACHE_LOCK_DIR="/var/lock"
+ENV APACHE_PID_FILE="/var/run/apache2.pid"
+ENV APACHE_RUN_USER="www-data"
+ENV APACHE_RUN_GROUP="www-data"
+ENV APACHE_LOG_DIR="/var/log/apache2"
+
+LABEL description="Webserver"
+LABEL version="1.0.0"
+
+VOLUME /var/www/html
+EXPOSE 80
+```
+
+### Faz o build da imagem executando o comando abaixo na mesma pasta onde está o arquivo Dockerfile.
+
+```sh
+docker image build -t meu_apache:1.0.0 .
+```
+
+> Esse -t é o nome queremos para a imagem.
+
+### Executar a imagem criada.
+
+```sh
+docker container run -ti meu_apache:1.0.0
+```
+
+
