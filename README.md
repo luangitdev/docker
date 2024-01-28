@@ -1,3 +1,52 @@
+# CONTAINERS
+
+- Quando se fala de conteiner está se referindo a isolamento.
+- Um container não enxerga os processos do outro.
+- Conseguimos determinar um limite de recursos do host para os containers.
+
+
+### Instalação do Docker:
+
+```sh
+curl -fsSL https://get.docker.com | bash
+```
+
+### Verifica a versão:
+
+```sh
+docker version
+```
+
+### Listar os conteiners criados(e em execução):
+
+```sh
+docker ps
+docker container ls
+```
+### Listar todos os containers (inclusive os parados):
+
+```sh
+docker ps -a
+docker container ls -a
+```
+
+### Executar um container docker:
+
+```sh
+docker run -ti hello-world
+docker container run -ti hello-world
+```
+
+### Outro exemplo:
+
+```sh
+docker container run -ti ubuntu
+```
+
+- O comando acima cria um container do ubuntu e já me traz o terminal do sistema em tela.
+- Se eu der um Ctrl + d e sair do container do ubuntu o processo do bash é encerrado e o container também.
+- Para sair sem matar o processo (e encerrar o container) é necessário usar o atalho ctrl + p + q.
+
 # PROCESSAMENTO, LOGS E REDE
 
 ### 1) Definir limites de CPU e memória ao container
