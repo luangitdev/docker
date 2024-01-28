@@ -309,4 +309,80 @@ docker image build -t meu_apache:1.0.0 .
 docker container run -ti meu_apache:1.0.0
 ```
 
+>Ao executar a imagem acima, e acessar o container com o apache instalado, será possível notar que o apache não está em execução, sendo necessário ativar o serviço manualmente.
+>
+>Isso não é muito interessante, geralmente queremos que o container suba já iniciando os devidos serviços que desejamos.
+>
+>Pra resolver isso, podemos usar o ENTRYPOINT no arquivo dockerfile.
+>
+>O ENTRYPOINT serve para definirmos qual o principal processo do container. 
+>
+>Ainda usando o exemplo do Apache usaríamos a seguinte expressão:
 
+```docker
+ENTRYPOINT["/usr/sbin/apachectl"]
+CMD ["-D", "FOREGROUND"]
+```
+
+Ou 
+
+```docker
+CMD /usr/sbin/apachectl -D FOREGROUND
+```
+
+> Só pode ser usada uma das duas formas, nunca as duas juntas. A recomendada é a do ENTRYPOINT.  
+> -D FOREGROUND faz o apache executar em primeiro plano.
+
+
+### Arquivo Dockerfile atualizado:
+
+```docker
+FROM debian
+
+RUN apt-get update && apt-get install -y apache2 && apt-get clean
+ENV APACHE_LOCK_DIR="/var/lock"
+ENV APACHE_PID_FILE="/var/run/apache2.pid"
+ENV APACHE_RUN_USER="www-data"
+ENV APACHE_RUN_GROUP="www-data"
+ENV APACHE_LOG_DIR="/var/log/apache2"
+
+LABEL description="Webserver"
+LABEL version="1.0.0"
+
+VOLUME /var/www/html
+EXPOSE 80
+
+ENTRYPOINT["/usr/sbin/apachectl"]
+CMD ["-D", "FOREGROUND"]
+```
+
+### Testando o novo arquivo Dockerfile:
+
+```sh
+docker image buil -t meu_apache:2.0.0
+docker container run -d -p 8080:80 meu_apache:2.0.0
+Pego o IPv4 da AWS e coloca :8080 no final, exemplo: http://34.217.114.210:8080/
+```
+
+### Existem outras opções que podem ser adicionadas no arquivo Dockerfile:
+
+```sh
+COPY index.html /var/www/html/
+```
+
+> Copia o arquivo para a pasta /var/www/html dentro do container.
+
+```sh
+ADD index.html /var/www/html/ 
+```
+
+> Principal diferença do ADD pro Copy é que se o arquivo estiver compactado o ADD automaticamente faz a extração)  
+> Se for passado um link de download, ele acessa o site faz o download e sobe o arquivo no container.
+
+USER root
+
+> Define qual o usuário deve ser logado no sistema durante o RUN container
+
+WORKDIR /var/www/html
+
+> Define qual será o diretório default quando o container for iniciado.
